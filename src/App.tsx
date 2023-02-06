@@ -3,9 +3,9 @@ import { Header } from './partials/Header/Header'
 
 function App() {
   return (
-    <div>
+    <>
       <Header />
-    </div>
+    </>
   )
 }
 
