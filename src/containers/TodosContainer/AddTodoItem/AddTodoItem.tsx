@@ -1,6 +1,7 @@
 import { FormEventHandler, useState } from 'react'
 import { Input } from '../../../components/Input/Input'
 import { Button } from '../../../components/Button/Button'
+import { useAutoFocus } from '../../../hooks/useAutoFocus'
 
 type AddTodoFormProps = {
   onAddClicked: (task: string) => void
@@ -9,7 +10,7 @@ type AddTodoFormProps = {
 // const AddTodoItemTextField = withAutoFocus(TextField); // using HoC
 
 export const AddTodoItem = ({ onAddClicked }: AddTodoFormProps) => {
-  //   const inputFieldRef = useAutoFocus();
+  const inputRef = useAutoFocus()
   const [value, setValue] = useState<string>('')
 
   const onInput = (value: string) => {
@@ -25,7 +26,7 @@ export const AddTodoItem = ({ onAddClicked }: AddTodoFormProps) => {
   return (
     <form className="flex" onSubmit={onFormSubmitted}>
       <div className="mr-1 flex-grow-1">
-        <Input value={value} onInput={onInput} />
+        <Input ref={inputRef} value={value} onInput={onInput} />
       </div>
       <Button type="submit" primary>
         Add
