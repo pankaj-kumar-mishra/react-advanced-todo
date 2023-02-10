@@ -1,6 +1,7 @@
 import { HttpAdapter } from '../adapters/HttpAdapter'
 import { Todo } from '../models/Todo'
 
+type ParamsType = { params?: { isDone: string } }
 export class TodoService {
   private readonly http: HttpAdapter
 
@@ -12,8 +13,12 @@ export class TodoService {
     return this.http.get<Todo>(`/todos/${id}`)
   }
 
-  async getAllTodo() {
-    return this.http.get<Todo[]>('/todos')
+  // async getAllTodo() {
+  //   return this.http.get<Todo[]>('/todos')
+  // }
+
+  async getAllTodo({ params }: ParamsType = {}) {
+    return this.http.get<Todo[]>('/todos', { query: params || {} })
   }
 
   async addTodo(todo: string) {
