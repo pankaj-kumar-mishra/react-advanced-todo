@@ -4,9 +4,11 @@ import { TodoService } from '../../services/TodoService'
 import { AddTodoItem } from './AddTodoItem/AddTodoItem'
 import { TodoItem } from './TodoItem/TodoItem'
 
-const todoService = new TodoService()
+type TodosContainerProps = {
+  todoService: TodoService
+}
 
-export const TodosContainer = () => {
+export const TodosContainer = ({ todoService }: TodosContainerProps) => {
   const [todos, setTodos] = useState<Todo[]>([])
 
   const fetchTodos = useCallback(async () => {
@@ -17,7 +19,7 @@ export const TodosContainer = () => {
     } catch (error) {
       console.log(error)
     }
-  }, [])
+  }, [todoService])
 
   useEffect(() => {
     fetchTodos()
@@ -35,7 +37,7 @@ export const TodosContainer = () => {
         console.log(error)
       }
     },
-    [fetchTodos],
+    [fetchTodos, todoService],
   )
 
   const onDeleteClicked = useCallback(
@@ -50,7 +52,7 @@ export const TodosContainer = () => {
         console.log(error)
       }
     },
-    [fetchTodos],
+    [fetchTodos, todoService],
   )
 
   return (
