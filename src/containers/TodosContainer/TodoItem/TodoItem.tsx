@@ -8,34 +8,42 @@ type TodoItemProps = {
   todo: Todo
   onEditClicked?: (id: number) => void
   onDeleteClicked?: (id: number) => void
-  onDoneChecked?: ({ id, isDone }: { id: number; isDone: boolean }) => void
+  onDoneClicked?: ({ id, isDone }: { id: number; isDone: boolean }) => void
 }
 
-export const TodoItem = memo(({ todo, onDeleteClicked }: TodoItemProps) => {
-  const onClickDelete = () => {
-    onDeleteClicked && onDeleteClicked(todo.id)
-  }
+export const TodoItem = memo(
+  ({ todo, onEditClicked, onDeleteClicked, onDoneClicked }: TodoItemProps) => {
+    const onClickDelete = () => {
+      onDeleteClicked?.(todo.id)
+    }
+    const onClickEdit = () => {
+      onEditClicked?.(todo.id)
+    }
+    const onClickDone = (value: boolean) => {
+      onDoneClicked?.({ id: todo.id, isDone: value })
+    }
 
-  return (
-    <div className={`${classes.TodoItem} flex`}>
-      <div className="mt-2 mr-1">
-        <CheckBox value={true} />
+    return (
+      <div className={`${classes.TodoItem} flex`}>
+        <div className="mt-2 mr-1">
+          <CheckBox value={todo.isDone} onInput={onClickDone} />
+        </div>
+        <div className="flex-grow-1 mt-auto mb-auto">
+          <span className={todo.isDone ? classes.TodoIsDone : ''}>
+            {todo.task}
+          </span>
+        </div>
+        <div>
+          <Button onClick={onClickEdit} transparent>
+            <i className="fa fa-pencil" />
+          </Button>
+        </div>
+        <div>
+          <Button onClick={onClickDelete} transparent>
+            <i className="fa fa-trash" />
+          </Button>
+        </div>
       </div>
-      <div className="flex-grow-1 mt-auto mb-auto">
-        <span className={todo.isDone ? classes.TodoIsDone : ''}>
-          {todo.task}
-        </span>
-      </div>
-      <div>
-        <Button transparent>
-          <i className="fa fa-pencil" />
-        </Button>
-      </div>
-      <div>
-        <Button onClick={onClickDelete} transparent>
-          <i className="fa fa-trash" />
-        </Button>
-      </div>
-    </div>
-  )
-})
+    )
+  },
+)

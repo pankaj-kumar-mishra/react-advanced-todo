@@ -3,7 +3,7 @@ export class HttpAdapter {
   private contentType: string
 
   constructor({ baseUrl }: { baseUrl: string }) {
-    this.baseUrl = 'http://localhost:3001'
+    this.baseUrl = baseUrl
     this.contentType = 'application/json'
   }
 
@@ -16,6 +16,16 @@ export class HttpAdapter {
   post<T>(url: string, data: T) {
     return fetch(this.baseUrl + url, {
       method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': this.contentType,
+      },
+    }).then((res) => res)
+  }
+
+  patch<T>(url: string, data: T) {
+    return fetch(this.baseUrl + url, {
+      method: 'PATCH',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': this.contentType,
