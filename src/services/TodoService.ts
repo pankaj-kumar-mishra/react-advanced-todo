@@ -8,16 +8,24 @@ export class TodoService {
     this.http = httpAdapter
   }
 
+  async getTodo(id: number) {
+    return this.http.get<Todo>(`/todos/${id}`)
+  }
+
   async getAllTodo() {
     return this.http.get<Todo[]>('/todos')
   }
 
   async addTodo(todo: string) {
-    return this.http.post('/todos', { todo })
+    return this.http.post<{ todo: string }>('/todos', { todo })
+  }
+
+  async updateTodo(id: number, todo: Partial<Todo>) {
+    return this.http.patch<Partial<Todo>>(`/todos/${id}`, todo)
   }
 
   async deleteTodo(id: number) {
-    return this.http.delete('/todos', { id })
+    return this.http.delete<{ id: number }>('/todos', { id })
   }
 }
 

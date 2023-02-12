@@ -1,4 +1,4 @@
-import { ElementType } from 'react'
+import { ComponentProps, ElementType } from 'react'
 import { container } from '../dependencies'
 
 // NOTE ElementType (function and class) components
@@ -6,7 +6,7 @@ export const withDependencies = (
   Component: ElementType,
   dependencies: { [key: string]: symbol },
 ) => {
-  const props = {}
+  const dependencyProps = {}
 
   Object.keys(dependencies).forEach((propName) => {
     const dependencyKey = Object.getOwnPropertyDescriptor(
@@ -17,12 +17,14 @@ export const withDependencies = (
 
     // props[propName] = dependency
     // NOTE to define we can use below approach
-    Object.defineProperty(props, propName, {
+    Object.defineProperty(dependencyProps, propName, {
       value: dependency,
       enumerable: true,
     })
     // NOTE internally JS enumerate properties but on "defineProperty" we need to manually do enumerable true
   })
 
-  return () => <Component {...props} />
+  return (props: ComponentProps<typeof Component>) => (
+    <Component {...props} {...dependencyProps} />
+  )
 }
