@@ -1,9 +1,16 @@
 import { useCallback, useState, useEffect } from 'react'
+import { ButtonSelect } from '../../components/ButtonSelect/ButtonSelect'
 import { Todo } from '../../models/Todo'
 import { TodoService } from '../../services/TodoService'
 import EditTodoContainer from '../EditTodoContainer'
 import { AddTodoItem } from './AddTodoItem/AddTodoItem'
 import { TodoItem } from './TodoItem/TodoItem'
+
+const buttonSelectOptions = [
+  { label: 'All', value: 'all' },
+  { label: 'Done', value: 'true' },
+  { label: 'Not Done', value: 'false' },
+]
 
 type TodosContainerProps = {
   todoService: TodoService
@@ -12,6 +19,7 @@ type TodosContainerProps = {
 export const TodosContainer = ({ todoService }: TodosContainerProps) => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [selectedTodoId, setSelectedTodoId] = useState<number>(-1)
+  const [todoFilter, setTodoFilter] = useState<string>('all')
 
   const fetchTodos = useCallback(async () => {
     try {
@@ -70,6 +78,20 @@ export const TodosContainer = ({ todoService }: TodosContainerProps) => {
     [fetchTodos, todoService],
   )
 
+  const onSelectTodoFilter = useCallback(
+    async (value: string) => {
+      setTodoFilter(value)
+      try {
+        const data = await todoService.getAllTodo({ params: { isDone: value } })
+        // console.log(data)
+        setTodos(data)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [todoService],
+  )
+
   const onEditClicked = useCallback((id: number) => {
     setSelectedTodoId(id)
   }, [])
@@ -86,6 +108,12 @@ export const TodosContainer = ({ todoService }: TodosContainerProps) => {
   return (
     <div>
       <AddTodoItem onAddClicked={onAddClicked} />
+      <ButtonSelect
+        className="mt-3"
+        options={buttonSelectOptions}
+        value={todoFilter}
+        onInput={onSelectTodoFilter}
+      />
       {todos.map((item) => (
         <TodoItem
           key={item.id}

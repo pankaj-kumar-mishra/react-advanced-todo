@@ -1,3 +1,5 @@
+type ParamsType = { query: object }
+
 export class HttpAdapter {
   private readonly baseUrl: string
   private contentType: string
@@ -7,8 +9,23 @@ export class HttpAdapter {
     this.contentType = 'application/json'
   }
 
-  get<T>(url: string): Promise<T> {
-    return fetch(this.baseUrl + url)
+  // get<T>(url: string): Promise<T> {
+  //   return fetch(this.baseUrl + url)
+  //     .then((res) => res.json())
+  //     .then((data) => data)
+  // }
+
+  get<T>(url: string, params: ParamsType = { query: {} }): Promise<T> {
+    const query = Object.keys(params?.query || {})
+      .map(
+        (key) =>
+          `${key}=${Object.getOwnPropertyDescriptor(params.query, key)?.value}`,
+      )
+      .join('&')
+
+    const requestUrl = this.baseUrl + url + (query ? `?${query}` : '')
+
+    return fetch(requestUrl)
       .then((res) => res.json())
       .then((data) => data)
   }
