@@ -1,3 +1,5 @@
+import { Thumbnail } from './Thumbnail'
+
 interface IProduct {
   id: string
   title: string
@@ -17,7 +19,8 @@ export function Product(props: IProductProps) {
   return (
     <div key={id}>
       <a href="/">
-        <img style={{ height: 100 }} src={image} alt="product" />
+        {/* <Thumbnail product={product} /> */}
+        <Thumbnail imageUrl={image} />
       </a>
       <div>
         <a href="/">
